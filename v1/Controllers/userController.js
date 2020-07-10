@@ -62,13 +62,14 @@ exports.get_user_by_id = async (req, res, next) => {
   }
 }
 
-// /api/users/id/followers/:id - get
+// /api/users/followers/:id - get
 exports.get_followers = async (req, res, next) => {
-  const id = req.params.id
-
   try {
-    const user = await Profile.findById(id)
+    const id = req.params.id
+    console.log(id)
+    const user = await Profile.findOne({ _id: id }).populate('followers', ['name'])
 
+    console.log('users', user)
     if (!user) {
       throw new Error('Not found')
     }
@@ -93,7 +94,7 @@ exports.get_followers = async (req, res, next) => {
 exports.get_following = async (req, res, next) => {
   const id = req.params.id
   try {
-    const user = await Profile.findById(id)
+    const user = await Profile.findById(id).populate('following', ['name'])
 
     if (!user) {
       throw new Error('Not found')
